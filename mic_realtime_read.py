@@ -60,8 +60,6 @@ def callback(in_data, frame_count, time_info, status):
     global rms
     global raw_data
     raw_data = in_data
-    #rms = audioop.rms(in_data, WIDTH)  # compute audio power
-    # print(rms)  # new # takes too long in callback
     return in_data, pyaudio.paContinue
 
 
