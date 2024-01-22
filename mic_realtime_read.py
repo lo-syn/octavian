@@ -7,8 +7,6 @@ This is the callback (non-blocking) version.
 
 import pyaudio
 import time
-import audioop 
-import struct
 import numpy as np
 import pyqtgraph as pg
 import sys
@@ -99,26 +97,6 @@ p2.setYRange(-0.05, 0.05)
 
 curve_freq = p1.plot()                       # create an empty "plot" (a curve to plot)#
 curve_time = p2.plot()
-
-import pyqtgraph.opengl as gl
-view = gl.GLViewWidget()
-view.show()
-
-
-gx = gl.GLGridItem()
-gx.rotate(90, 0, 1, 0)
-gx.translate(-1, 0, 0)
-gx.scale(0.1,0.1,0.1)
-view.addItem(gx)
-gy = gl.GLGridItem()
-gy.rotate(90, 1, 0, 0)
-gy.translate(0, -1, 0)
-gy.scale(0.1,0.1,0.1)
-view.addItem(gy)
-gz = gl.GLGridItem()
-gz.translate(0, 0, -1)
-gz.scale(0.1,0.1,0.1)
-view.addItem(gz)
 
 
 #windowWidth = 500                       # width of the window displaying the curve
