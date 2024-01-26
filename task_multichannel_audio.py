@@ -6,13 +6,14 @@ import matplotlib.pyplot as plt
 from lib_sig_process import audio_slicer
 
 
-filename = r"C:\Users\laurence.porter\Documents\Test_Development\Octavian\5s_-6_2dbfs.wav"
+filename = r"C:\Users\laurence.porter\Documents\Test_Development\Octavian\Driver1_Imp_V_-6dBFS.wav"
 SCALE_V = 11 / (2**15)
+SCALE_I = 3 / (2**15)
 
 samplerate, data = wavfile.read(filename)
-print(f"number of channels = {data.shape[1]}")
+#print(f"number of channels = {data.shape[1]}")
 
-start_time = 0.5795
+start_time = 0.5720
 burst_length = 5
 
 data = audio_slicer(data, start_time,start_time+burst_length+0.002,samplerate)
@@ -27,10 +28,13 @@ convert_16bit = float(2**15)
 export_data = []
 export_data.append(time)
 
-for i in range(data.shape[1]):
+#for i in range(data.shape[1]):
+for i in range(1):
     #print(driver_idx_to_VPB_channel[i])
-    plot_data = (data[:, i] / (convert_16bit))
+    #plot_data = (data[:, i] / (convert_16bit))
+    plot_data = (data / (convert_16bit))
     plot_data = list(plot_data * SCALE_V)
+    #plot_data = list(plot_data * SCALE_I)
     export_data.append(plot_data)
     plt.plot(time, plot_data, label="VPB "+str(i))
 
