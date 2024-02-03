@@ -105,7 +105,7 @@ def biquad_ba_export(B, A, fs, file_name):
 
 # Functions related to exporting of audio data
 
-def wav_export(audio_array, file_name):
-    audio_array = audio_array[1] * 2**15
+def wav_export(audio_array, fs, file_name):
+    audio_array = audio_array * 2**15
     data = audio_array.astype(np.int16)
     wavfile.write(str(file_name)+".wav", 48000, data)
