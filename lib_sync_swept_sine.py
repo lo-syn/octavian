@@ -9,6 +9,10 @@ from lib_sig_plot import *
 FS = 48000
 
 def swept_sine(f1, f2, fs, time):
+    '''
+    This function generates an exponential sine sweep
+    It is a Python implementation of the Matlab code found in Synchronized Sine Sweep paper
+    '''
     L = time / math.log(f2/f1)
     t = np.arange(0,(fs*time)-1)/ fs
     x = np.sin(2* math.pi *f1 *L*(np.exp(t/L)))
