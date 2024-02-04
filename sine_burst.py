@@ -30,9 +30,11 @@ class SineBurst(object):
 
         import matplotlib.pyplot as plt
         from sine_burst import SineBurst
-        sine_burst = SineBurst(1000, -3, 0.1, 48000)
-        plt.plot(sine_burst.time_axis, sine_burst.signal)
-        plt.title('Sine Burst')
+        sine_burst = SineBurst(1000, -3, 0.1, 48000, windowed=False)
+        windowed_sine_burst = SineBurst(1000, -3, 0.1, 48000, windowed=True)
+        plt.plot(sine_burst.time_axis,sine_burst.signal)
+        plt.plot(windowed_sine_burst.time_axis, windowed_sine_burst.signal)
+        plt.title('Sine Bursts')
         plt.ylabel('Amplitude')
         plt.ylim([-1, 1])
         plt.xlabel('Time (secs)')
@@ -54,6 +56,8 @@ class SineBurst(object):
         self.samplerate = samplerate
         if windowed == True:
             self.windowed = windowed
+        else:
+            self.windowed = None
         self.run()
     
     def gen_sineburst(self):
@@ -76,22 +80,19 @@ class SineBurst(object):
         '''
         This method applies a cosine window to the first 
         '''
-        fade = int(len(sine_burst) / 10)
-        fade = np.arange(0, fade-1, dtype=int)
-        fade_in = (1 - np.cos(fade/fade*pi))/2
+        fade_samples = int(len(sine_burst) / 10)
+        fade = np.arange(0, fade_samples-1, dtype=int)
+        fade_in = (1 - np.cos(fade/fade_samples*pi))/2
         fade_out = np.flip(fade_in)
-        idx = np.arange(0,len(fade))
+        idx = np.arange(1,fade_samples)
         sine_burst[idx]=sine_burst[idx] * fade_in
         sine_burst[-len(idx)::]=sine_burst[-len(idx)::] * fade_out
-        return sine_burst
+        self.signal = sine_burst
 
     def run(self):
         sine_burst = self.gen_sineburst()
         if self.windowed == True:
-            self.burst = self.windowing(sine_burst)
-
-        
-        #tone_burst = np.stack((time_axis,tone_burst))
+            self.windowing(sine_burst)
     
     @staticmethod
     def _check_parameters(freq, db_amplitude, duration, samplerate):
@@ -109,9 +110,5 @@ class SineBurst(object):
             raise ValueError(
                 '`Sample Rate` must be at least twice `Freq`')
 
-    #@property
-    #def freq(self) -> int:
-    #    return self._freq
-    
 
     
