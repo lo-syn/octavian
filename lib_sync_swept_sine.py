@@ -37,7 +37,9 @@ def sine_sweep_windowing(sine_sweep_array, fs):
     return sine_sweep_array
 
 def deconvolve(input_array, L, f1, fs):
-
+    '''
+    This is a first attempt at deconvolve a sine sweep using inverse filtering
+    '''
     length = 2**math.ceil(math.log2(len(input_array)))
 
     Y = np.fft.fft(input_array,length) / fs 
