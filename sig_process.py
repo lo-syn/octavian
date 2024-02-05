@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import scipy
+from scipy.io import wavfile
 
 def audio_slicer(audio_object, start_secs, end_secs, fs):
     start_sample = int(start_secs * fs)
@@ -64,3 +65,9 @@ def audio_fft_convert(audio_object, fs, save_to_file, file_name):
         fft_data = np.stack(((fft_freqs,fft_db)))
         fft_data = np.transpose(fft_data)
         np.savetxt(file_name+".csv", fft_data, header="Frequency (Hz), Level (dB)", delimiter=',')
+
+def audio_export(audio_object, file_name):
+
+    audio_array = audio_object.signal * 2**15
+    data = audio_array.astype(np.int16)
+    wavfile.write(str(file_name)+".wav", audio_object.samplerate, data)
