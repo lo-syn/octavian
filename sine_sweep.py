@@ -32,10 +32,10 @@ class SineSweep(object):
 
         import matplotlib.pyplot as plt
         from sine_sweep import SineSweep
-        sine_burst = SineSweep(20,200, -3, 1, 48000, windowed=False)
-        windowed_sine_burst = SineSweep(20, 200, -3, 1, 48000, windowed=True)
-        plt.plot(sine_burst.time_axis, sine_burst.signal, color='r')
-        plt.plot(windowed_sine_burst.time_axis, windowed_sine_burst.signal, color='b')
+        sine_sweep = SineSweep(20,200, -3, 1, 48000, windowed=False)
+        windowed_sine_sweep = SineSweep(20, 200, -12, 1, 48000, windowed=True)
+        plt.plot(sine_sweep.time_axis, sine_sweep.signal, color='r')
+        plt.plot(windowed_sine_sweep.time_axis, windowed_sine_sweep.signal, color='b')
         plt.title('Sine Bursts')
         plt.ylabel('Amplitude')
         plt.ylim([-1, 1])
@@ -69,18 +69,6 @@ class SineSweep(object):
         This function generates an exponential sine sweep
         It is a Python implementation of the Matlab code found in Synchronized Sine Sweep paper
         '''
-        L = self.duration_s / math.log(self.freq2/self.freq1)
-        t = np.arange(0,(self.samplerate*self.duration_s)-1)/ self.samplerate
-        sweep = np.sin(2* math.pi *self.freq1 *L*(np.exp(t/L)))
-
-        step = 1 / self.samplerate
-        time_axis = np.arange(0,len(sweep))
-        self.time_axis = time_axis * step
-        self.signal = sweep
-
-        return sweep
-    
-    def gen_sinesweep(self):
         startfreq = self.freq1
         stopfreq = self.freq2
         durationappr = self.duration_s
@@ -106,6 +94,9 @@ class SineSweep(object):
         self._logfreqratio = logfreqratio
         self._kappa = kappa
 
+        gain_dbfs = 10 ** (self.db_amplitude/20)
+        sweep = sweep * gain_dbfs
+
         # make accessible through readonly properties
         self._sweepperiod = sweepperiod
         self._duration = duration
@@ -126,7 +117,7 @@ class SineSweep(object):
         self.signal = sine_sweep
 
     def run(self):
-        sine_sweep = self.gen_sinesweep()
+        self.gen_sinesweep()
         if self.windowed == True:
             self.windowing(self.signal)
     
