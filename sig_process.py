@@ -1,4 +1,6 @@
 import numpy as np
+import math
+import scipy
 
 def audio_slicer(audio_object, start_secs, end_secs, fs):
     start_sample = int(start_secs * fs)
@@ -38,3 +40,27 @@ def audio_parameter_calc(audio_object, print_out):
     audio_object.crest_factor = crest_factor
 
     return crest_factor, peak_db, rms_db
+
+def audio_fft_convert(audio_object, fs, save_to_file, file_name):
+    duration = len(audio_object.signal) / fs
+    fft_array = scipy.fft.fft(audio_object.signal)
+    fft_freqs = scipy.fft.fftfreq(int(fs * duration), 1 / fs)
+
+    reference = max(abs(fft_array)) # 0dB becomes Maximum Amplitude
+    fft_db = []
+
+    for i in fft_array:
+        fft_db.append(20 * math.log10(abs(i) / reference))
+
+    fft_data_length = int(len(fft_freqs) / 2)
+    fft_db = fft_db[:fft_data_length]
+    fft_freqs = fft_freqs[:fft_data_length]
+    fft_freqs = np.array(fft_freqs)
+    fft_db = np.array(fft_db)
+    audio_object.fft_freqs = fft_freqs
+    audio_object.fft_db = fft_db
+
+    if save_to_file == True:
+        fft_data = np.stack(((fft_freqs,fft_db)))
+        fft_data = np.transpose(fft_data)
+        np.savetxt(file_name+".csv", fft_data, header="Frequency (Hz), Level (dB)", delimiter=',')
