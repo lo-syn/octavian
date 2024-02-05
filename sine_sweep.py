@@ -1,4 +1,5 @@
-
+import math
+import numpy as np
 
 class SineSweep(object):
 
@@ -30,9 +31,9 @@ class SineSweep(object):
     .. plot::
 
         import matplotlib.pyplot as plt
-        from sine_burst import SineBurst
-        sine_burst = SineBurst(1000, -3, 0.1, 48000, windowed=False)
-        windowed_sine_burst = SineBurst(1000, -3, 0.1, 48000, windowed=True)
+        from sine_sweep import SineSweep
+        sine_burst = SineSweep(20,200, -3, 1, 48000, windowed=False)
+        windowed_sine_burst = SineSweep(20, 200, -3, 1, 48000, windowed=True)
         plt.plot(sine_burst.time_axis, sine_burst.signal, color='r')
         plt.plot(windowed_sine_burst.time_axis, windowed_sine_burst.signal, color='b')
         plt.title('Sine Bursts')
@@ -63,52 +64,91 @@ class SineSweep(object):
             self.windowed = None
         self.run()
     
-    def gen_sineburst(self):
+    def gen_sinesweep(self):
         '''
-        This method generates the sine burst
+        This function generates an exponential sine sweep
+        It is a Python implementation of the Matlab code found in Synchronized Sine Sweep paper
         '''
-        length = np.pi * 2 * self.freq
-        gain_dbfs = 10 ** (self.db_amplitude/20)
-        sine_burst = gain_dbfs * np.sin(
-            np.arange(0, length * self.duration_s, length / self.samplerate)
-        )
+        L = self.duration_s / math.log(self.freq2/self.freq1)
+        t = np.arange(0,(self.samplerate*self.duration_s)-1)/ self.samplerate
+        sweep = np.sin(2* math.pi *self.freq1 *L*(np.exp(t/L)))
+
         step = 1 / self.samplerate
-        time_axis = np.arange(0,len(sine_burst))
+        time_axis = np.arange(0,len(sweep))
         self.time_axis = time_axis * step
-        self.signal = sine_burst
+        self.signal = sweep
 
-        return sine_burst
+        return sweep
+    
+    def gen_sinesweep(self):
+        startfreq = self.freq1
+        stopfreq = self.freq2
+        durationappr = self.duration_s
+        samplerate = self.samplerate
+    
+        logfreqratio = np.log(stopfreq/startfreq)  # ln(f2/f1)
 
-    def windowing(self, sine_burst):
+        # symbol $k$, eq. 32 from paper
+        kappa = np.round(startfreq*durationappr/logfreqratio)
+
+        # symbol $T$ in paper
+        duration = kappa * logfreqratio / startfreq
+
+        # symbol L in paper
+        sweepperiod = kappa / startfreq
+        dt = 1.0 / samplerate
+        time = np.arange(0, duration, dt)
+        # eq. 33 from paper
+        phi = 2*np.pi*startfreq*sweepperiod*np.exp(time/sweepperiod)
+        sweep = np.sin(phi)
+
+        # keep as private attributes
+        self._logfreqratio = logfreqratio
+        self._kappa = kappa
+
+        # make accessible through readonly properties
+        self._sweepperiod = sweepperiod
+        self._duration = duration
+        self.time_axis = time
+        self.signal = sweep
+
+    def windowing(self, sine_sweep):
         '''
         This method applies a cosine window to the first 
         '''
-        fade_samples = int(len(sine_burst) / 10)
+        fade_samples = int(len(sine_sweep) / 10)
         fade = np.arange(0, fade_samples-1, dtype=int)
-        fade_in = (1 - np.cos(fade/fade_samples*pi))/2
+        fade_in = (1 - np.cos(fade/fade_samples*math.pi))/2
         fade_out = np.flip(fade_in)
         idx = np.arange(1,fade_samples)
-        sine_burst[idx]=sine_burst[idx] * fade_in
-        sine_burst[-len(idx)::]=sine_burst[-len(idx)::] * fade_out
-        self.signal = sine_burst
+        sine_sweep[idx]=sine_sweep[idx] * fade_in
+        sine_sweep[-len(idx)::]=sine_sweep[-len(idx)::] * fade_out
+        self.signal = sine_sweep
 
     def run(self):
-        sine_burst = self.gen_sineburst()
+        sine_sweep = self.sinesweep()
         if self.windowed == True:
-            self.windowing(sine_burst)
+            self.windowing(self.signal)
     
     @staticmethod
-    def _check_parameters(freq, db_amplitude, duration, samplerate):
-        """Checks the parameters for a synchronized sweep, raises exceptions if neccessary."""
-        if freq <= 0:
+    def _check_parameters(freq1, freq2, db_amplitude, duration, samplerate):
+        """Checks the parameters for a synchronized sweep, raises exceptions if necessary."""
+        if freq1 <= 0:
             raise ValueError(
-                f'`Freq` (={freq}) must be bigger than 0.')
+                f'`Freq1` (={freq1}) must be bigger than 0.')
+        if freq2 <= 0:
+            raise ValueError(
+                f'`Freq2` (={freq2}) must be bigger than 0.')
         if duration <= 0:
             raise ValueError(f'`Duration` ({duration}) must be bigger than 0.')
         if db_amplitude < -120 or db_amplitude > 0:
             raise ValueError(f'`Amplitude` ({db_amplitude}) is outside of usuable range (-120 -> 0).')
         if samplerate <= 0:
             raise ValueError('Sample Rate must be bigger than 0.')
-        if samplerate < 2*freq:
+        if samplerate < 2*freq2:
             raise ValueError(
-                '`Sample Rate` must be at least twice `Freq`')
+                '`Sample Rate` must be at least twice `Freq2`')
+        if freq1 > freq2:
+            raise ValueError(
+                '`Freq2` is greater than `Freq1`'
+            )

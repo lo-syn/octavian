@@ -96,7 +96,7 @@ class SineBurst(object):
     
     @staticmethod
     def _check_parameters(freq, db_amplitude, duration, samplerate):
-        """Checks the parameters for a synchronized sweep, raises exceptions if neccessary."""
+        """Checks the parameters for a sine burst, raises exceptions if necessary."""
         if freq <= 0:
             raise ValueError(
                 f'`Freq` (={freq}) must be bigger than 0.')
