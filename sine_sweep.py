@@ -1,15 +1,16 @@
-import numpy as np
-from math import pi
 
-class SineBurst(object):
+
+class SineSweep(object):
 
     '''
-    Generates a tone burst of various waveform shapes (sine, square, triangle, saw)
+    Generates an  sine sweep of various waveform shapes (sine, square, triangle, saw)
 
     Parameters
     ----------
-    freq : scalar
-        Frequency of tone burst in Hz
+    freq1 : scalar
+        Start frequency of sweep in Hz
+    freq2 : scalar
+        Stop frequency of sweep in Hz
     db_amplitude : scalar
         Logarithmic amplitude of burst, with range -120 to 0 (dBFS) 
     duration_s : scalar
@@ -19,12 +20,12 @@ class SineBurst(object):
 
     Returns
     -------
-    signal : SineBurst.signal
+    sweep : SineBurst.signal
     time_axis : SineBurst.time
 
     Examples
     --------
-    >>> sine_burst = SineBurst(1000, -3, 0.1, 48000)
+    >>> sine_sweep = SineSweep(20, 20000, -3, 1, 48000)
 
     .. plot::
 
@@ -43,14 +44,16 @@ class SineBurst(object):
     '''
 
     def __init__(self, 
-                freq: int,
+                freq1: int,
+                freq2: int,
                 db_amplitude: float,
                 duration_s: float,
                 samplerate: int,
                 windowed=None
                 ):
-        SineBurst._check_parameters(freq,db_amplitude,duration_s,samplerate)
-        self.freq = freq
+        SineSweep._check_parameters(freq1,freq2,db_amplitude,duration_s,samplerate)
+        self.freq1 = freq1
+        self.freq2 = freq2
         self.db_amplitude = db_amplitude
         self.duration_s = duration_s
         self.samplerate = samplerate
@@ -109,7 +112,3 @@ class SineBurst(object):
         if samplerate < 2*freq:
             raise ValueError(
                 '`Sample Rate` must be at least twice `Freq`')
-
-
-
-    
