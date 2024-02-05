@@ -122,7 +122,7 @@ class SineSweep(object):
             self.windowing(self.signal)
     
     @staticmethod
-    def _check_parameters(freq1, freq2, db_amplitude, duration, samplerate):
+    def _check_parameters(freq1, freq2, db_amplitude, duration_s, samplerate):
         """Checks the parameters for a synchronized sweep, raises exceptions if necessary."""
         if freq1 <= 0:
             raise ValueError(
@@ -130,8 +130,8 @@ class SineSweep(object):
         if freq2 <= 0:
             raise ValueError(
                 f'`Freq2` (={freq2}) must be bigger than 0.')
-        if duration <= 0:
-            raise ValueError(f'`Duration` ({duration}) must be bigger than 0.')
+        if duration_s <= 0:
+            raise ValueError(f'`Duration` ({duration_s}) must be bigger than 0.')
         if db_amplitude < -120 or db_amplitude > 0:
             raise ValueError(f'`Amplitude` ({db_amplitude}) is outside of usuable range (-120 -> 0).')
         if samplerate <= 0:
