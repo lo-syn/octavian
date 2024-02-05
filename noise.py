@@ -77,8 +77,6 @@ class Noise(object):
         self.time_axis = time_axis * step
         self.signal = noise
 
-        return noise
-
     def apply_pinking_filter(self,noise):
         B = [0.049922035, -0.095993537, 0.050612699, -0.004408786]
         A = [1, -2.494956002, 2.017265875, -0.522189400]
@@ -87,6 +85,8 @@ class Noise(object):
 
         multiplier = 1 / max(noise)
         noise = noise * multiplier
+
+        return noise
 
     def run(self):
         noise = self.gen_noise()
