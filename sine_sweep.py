@@ -126,7 +126,7 @@ class SineSweep(object):
         self.signal = sine_sweep
 
     def run(self):
-        sine_sweep = self.sinesweep()
+        sine_sweep = self.gen_sinesweep()
         if self.windowed == True:
             self.windowing(self.signal)
     
