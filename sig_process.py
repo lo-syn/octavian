@@ -3,9 +3,9 @@ import math
 import scipy
 from scipy.io import wavfile
 
-def audio_slicer(audio_object, start_secs, end_secs, fs):
-    start_sample = int(start_secs * fs)
-    end_sample = int(end_secs * fs)
+def audio_slicer(audio_object, start_secs, end_secs):
+    start_sample = int(start_secs * audio_object.samplerate)
+    end_sample = int(end_secs * audio_object.samplerate)
     audio_object.signal = audio_object.signal[start_sample:end_sample]
     audio_object.time_axis = audio_object.time_axis[start_sample:end_sample]
 
@@ -42,10 +42,10 @@ def audio_parameter_calc(audio_object, print_out):
 
     return crest_factor, peak_db, rms_db
 
-def audio_fft_convert(audio_object, fs, save_to_file, file_name):
-    duration = len(audio_object.signal) / fs
+def audio_fft_convert(audio_object, save_to_file, file_name):
+    duration = len(audio_object.signal) / audio_object.samplerate
     fft_array = scipy.fft.fft(audio_object.signal)
-    fft_freqs = scipy.fft.fftfreq(int(fs * duration), 1 / fs)
+    fft_freqs = scipy.fft.fftfreq(int(audio_object.samplerate * duration), 1 / audio_object.samplerate)
 
     reference = max(abs(fft_array)) # 0dB becomes Maximum Amplitude
     fft_db = []
