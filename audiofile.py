@@ -3,7 +3,7 @@ import numpy as np
 
 class AudioFile(object):
 
-    """
+    '''
     Reads a .wav audio file and returns it as an Object
     This is mainly just to allow all processing functions to work
 
@@ -19,13 +19,13 @@ class AudioFile(object):
 
     Examples
     --------
-    >>> audio_file = AudioFile("test.wav")
+    >>> audio_file = AudioFile(file_path)
 
     .. plot::
 
         import matplotlib.pyplot as plt
         from audiofile import AudioFile
-        audiofile = AudioFile(r"C:\Users\laure\OneDrive\Documents\Octavian\4AM.wav")
+        audiofile = AudioFile(file_path)
         print(audiofile.signal)
         plt.plot(audiofile.time_axis, audiofile.signal, color='r')
         plt.title('Audio File')
@@ -33,7 +33,7 @@ class AudioFile(object):
         plt.ylim([-1, 1])
         plt.xlabel('Time (secs)')
         plt.show()
-    """
+    '''
 
     def __init__(self, 
                 file_path: str,

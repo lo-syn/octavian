@@ -3,6 +3,8 @@ import math
 import scipy
 from scipy.io import wavfile
 
+# Functions related to sample conversion/slicing
+
 def audio_slicer(audio_object, start_secs, end_secs):
     start_sample = int(start_secs * audio_object.samplerate)
     end_sample = int(end_secs * audio_object.samplerate)
@@ -10,6 +12,8 @@ def audio_slicer(audio_object, start_secs, end_secs):
     audio_object.time_axis = audio_object.time_axis[start_sample:end_sample]
 
     return audio_object
+
+# Functions related to Gain (addition/subtraction/calculation/conversion)
 
 def audio_amplify_dbfs(audio_object, gain_dbfs):
     amplitude_multiplier = 10 ** (gain_dbfs / 20)
@@ -42,6 +46,8 @@ def audio_parameter_calc(audio_object, print_out):
 
     return crest_factor, peak_db, rms_db
 
+# Functions related to time/frequency domain conversion
+
 def audio_fft_convert(audio_object, save_to_file, file_name):
     duration = len(audio_object.signal) / audio_object.samplerate
     fft_array = scipy.fft.fft(audio_object.signal)
@@ -65,6 +71,8 @@ def audio_fft_convert(audio_object, save_to_file, file_name):
         fft_data = np.stack(((fft_freqs,fft_db)))
         fft_data = np.transpose(fft_data)
         np.savetxt(file_name+".csv", fft_data, header="Frequency (Hz), Level (dB)", delimiter=',')
+
+# Functions related to exporting of audio data
 
 def audio_export(audio_object, file_name):
 
