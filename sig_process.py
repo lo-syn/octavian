@@ -13,6 +13,9 @@ def audio_slicer(audio_object, start_secs, end_secs):
 
     return audio_object
 
+def audio_reverse(audio_object):
+    audio_object.signal = np.flip(audio_object.signal)
+
 # Functions related to Gain (addition/subtraction/calculation/conversion)
 
 def audio_amplify_dbfs(audio_object, gain_dbfs):
