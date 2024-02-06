@@ -47,7 +47,7 @@ class AudioFile(object):
         This function opens audio file
         '''
         self.samplerate, signal = wavfile.read(self.file_path)
-        self.num_channels = int(self.signal.getnchannels())
+        self.num_channels = signal.shape  
         convert_16bit = float(2**15)
         self.signal = (signal / (convert_16bit))
         step = 1 / self.samplerate

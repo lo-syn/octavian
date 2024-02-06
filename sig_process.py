@@ -72,6 +72,22 @@ def audio_fft_convert(audio_object, save_to_file, file_name):
         fft_data = np.transpose(fft_data)
         np.savetxt(file_name+".csv", fft_data, header="Frequency (Hz), Level (dB)", delimiter=',')
 
+def audio_envelope_follower(audio_object, frame_size, hop_length):
+    amplitude_envelope = []
+
+    # Calculate amplitiude envelope for each frame
+
+    for i in range(0, len(audio_object.signal), hop_length):
+        current_frame_ae = max(audio_object.signal[i:i+frame_size])
+        amplitude_envelope.append(current_frame_ae)
+    
+    frames = range(0,len(amplitude_envelope))
+    times=[]
+    for i in frames:
+        times.append(i * hop_length/audio_object.samplerate)
+    audio_object.env_amplitude = amplitude_envelope
+    audio_object.env_time = times
+
 # Functions related to exporting of audio data
 
 def audio_export(audio_object, file_name):
