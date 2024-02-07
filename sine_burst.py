@@ -20,8 +20,10 @@ class SineBurst(object):
     Returns
     -------
     signal : SineBurst.signal
-    time_axis : SineBurst.time
+        Returns a 1D array with sine burst signal
 
+    time_axis : SineBurst.time
+        Returns a 1D array with the time axis
     Examples
     --------
     >>> sine_burst = SineBurst(1000, -3, 0.1, 48000)
