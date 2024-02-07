@@ -60,9 +60,7 @@ class AudioFile(object):
     def run(self):
         self.open_audiofile()
         
-
-    
     @staticmethod
     def _check_parameters(file_path):
-        """Checks the parameters for noise, raises exceptions if necessary."""
+        """Checks the parameters for audio file, raises exceptions if necessary."""
         pass # Should add a check that file path exists here

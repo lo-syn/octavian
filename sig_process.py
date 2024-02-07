@@ -43,7 +43,7 @@ def audio_parameter_calc(audio_object, print_out):
         print("Peak (dB): ", peak_db)
         print("RMS (dB): ", rms_db)
 
-    audio_object.peak_db = rms_db
+    audio_object.peak_db = peak_db
     audio_object.rms_db = rms_db
     audio_object.crest_factor = crest_factor
 

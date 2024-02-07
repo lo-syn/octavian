@@ -14,7 +14,9 @@ audio_file = AudioFile(r"4AM.wav")
 sine_burst = audio_slicer(sine_burst, 0, 0.55)
 sine_sweep = audio_slicer(sine_sweep, 0, 0.55)
 white_noise = audio_slicer(white_noise, 0, 0.55)
-audio_file = audio_slicer(audio_file, 0, 1)
+#audio_file = audio_slicer(audio_file, 0, 1)
+
+audio_reverse(audio_file) 
 
 sine_burst = audio_amplify_dbfs(sine_burst, 3)
 sine_sweep = audio_amplify_dbfs(sine_sweep, -3)
@@ -36,7 +38,6 @@ audio_export(sine_sweep, "test_sine_sweep_export")
 audio_export(white_noise, "test_white_noise_export")
 audio_export(audio_file, "test_audio_file_export")
 
-audio_reverse(audio_file) 
 
 # audio_envelope_follower(audio_file, 1024, 512) DOESN'T WORK WITH MULTICHANNEL
 
