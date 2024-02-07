@@ -51,7 +51,10 @@ def audio_parameter_calc(audio_object, print_out):
 
 # Functions related to time/frequency domain conversion
 
-def audio_fft_convert(audio_object, save_to_file, file_name):
+def audio_fft_convert(
+        audio_object, 
+        save_to_file = False, 
+        file_name = None):
     duration = len(audio_object.signal) / audio_object.samplerate
     fft_array = scipy.fft.fft(audio_object.signal)
     fft_freqs = scipy.fft.fftfreq(int(audio_object.samplerate * duration), 1 / audio_object.samplerate)

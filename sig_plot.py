@@ -16,10 +16,9 @@ def create_window():
     window.show()
     return window
 
-def add_freq_plot(array_2d, window,rms,peak,crest_factor):
-    array_2d = np.transpose(array_2d)
-    x = array_2d[0]
-    y = array_2d[1]
+def add_freq_plot(audio_object, window):
+    x = audio_object.fft_freqs
+    y = audio_object.fft_db
     p1 = window.addPlot(row=0,col=0)
     p1.setLabel(axis='bottom', text='Frequency', units='Hz')
     p1.setLabel(axis='left', text='Level', units='dB')
@@ -44,7 +43,7 @@ def add_time_plot(audio_object, window):
     p2 = window.addPlot(row=1,col=0)
     p2.showGrid(x=True, y=True, alpha=100)   # To show grid lines across x axis and y axis
     bottomaxis = p2.getAxis('bottom')
-    bottomaxis.setLogMode(True)
+    bottomaxis.setLogMode(False)
     p2.setLabel(axis='bottom', text='Time', units='Secs')
     p2.setLabel(axis='left', text='Level')
     p2.showGrid(x=True,y=True)
