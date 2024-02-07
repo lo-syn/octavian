@@ -29,7 +29,7 @@ def audio_amplify_dbfs(audio_object, gain_dbfs):
 
     return audio_object
 
-def audio_parameter_calc(audio_object, print_out):
+def audio_parameter_calc(audio_object, print_out = False):
     peak = max(audio_object.signal)
     peak_db = round((20 * np.log10(1/peak))*-1,2)
   

@@ -24,18 +24,8 @@ def add_freq_plot(audio_object, window, row, col):
     p1.setLabel(axis='left', text='Level', units='dB')
     p1.showGrid(x=True, y=True)   # To show grid lines across x axis and y axis
     p1.setLogMode(True)
-    #rms_text = pg.TextItem(str("RMS (db):"+str(rms)))
-    #peak_text = pg.TextItem(str("Peak (db):"+str(peak)))
-    #cf_text = pg.TextItem(str("Crest Factor (db):"+str(crest_factor)))
-    #p1.addItem(rms_text)
-    #p1.addItem(peak_text)
-    #p1.addItem(cf_text)
-    #rms_text.setPos(0,0)
-    #peak_text.setPos(1,0)
-    #cf_text.setPos(2,0)
 
     p1.plot(x=x, y=y, pen=1)
-
 
 def add_time_plot(audio_object, window, row, col):
     x = audio_object.time_axis
@@ -49,5 +39,11 @@ def add_time_plot(audio_object, window, row, col):
     p2.showGrid(x=True,y=True)
 
     p2.plot(x=x, y=y, pen=1)
+
+def add_label(window, value):
+    label = pg.LabelItem(justify='right')
+    label.setText(value)
+    window.addItem(label)
+
 
 
