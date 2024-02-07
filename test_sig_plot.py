@@ -1,4 +1,4 @@
-from lib_sig_plot import *
+from sig_plot import *
 
 app = init_plot()
 window = create_window()
