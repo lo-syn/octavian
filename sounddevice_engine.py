@@ -59,7 +59,8 @@ class SdAudioStreamer:
             if self.output_device_name in i["name"]:
                 print(f"Found device '{self.output_device_name}' with idx {i['index']} ")
                 found_output_device = True
-                self.device_index = i["index"]
+                self.output_device_index = i["index"]
+                self.output_device_no_of_channels = i["max_output_channels"]
         if found_output_device != True:
             print(f"Unable to find output device: {self.output_device_name}")
 
@@ -101,40 +102,17 @@ class SdAudioStreamer:
         Check if the right audio output device is selected in the OS
         """
         # Search for output device
-        if self.input_device_name is None:
-            return
-
-        device_count = self.pa.get_host_api_info_by_index(HOST_API_INDEX).get(
-            "deviceCount"
-        )
-        device_index = -1
-        for i in range(0, device_count):
-            if (
-                self.pa.get_device_info_by_host_api_device_index(HOST_API_INDEX, i).get(
-                    "maxInputChannels"
-                )
-            ) > 0:
-                input_device_name = self.pa.get_device_info_by_host_api_device_index(
-                    HOST_API_INDEX, i
-                ).get("name")
-                input_device_index = i
-                self.input_devices.append(
-                    {"name": input_device_name, "index": input_device_index}
-                )
-        for device in self.input_devices:
-            if device["name"] == self.input_device_name:
-                device_index = device["index"]
-                break
-        if device_index == -1:
-            raise Exception(
-                f'Audio input device "{self.input_device_name}" could not be found.'
-            )
-        self.input_device_index = device_index
-        self.input_device_no_of_channels = (
-            self.pa.get_device_info_by_host_api_device_index(
-                HOST_API_INDEX, device_index
-            ).get("maxInputChannels")
-        )
+        # Search for output device
+        devices = sd.query_devices()
+        found_input_device = False
+        for i in devices:
+            if self.input_device_name in i["name"]:
+                print(f"Found device '{self.input_device_name}' with idx {i['index']} ")
+                found_input_device = True
+                self.input_device_index = i["index"]
+                self.input_device_no_of_channels = i["max_input_channels"]
+        if found_input_device != True:
+            print(f"Unable to find input device: {self.input_device_name}")
 
     def play_stream(
         self, content: str | np.ndarray, channel: int | None = None
@@ -217,20 +195,23 @@ class SdAudioStreamer:
         self.cb_count = 0
         enable_recording = True if self.input_device_name is not None else False
 
-        stream = self.pa.open(
-            format=AUDIO_FORMAT,
-            channels=1,
-            rate=AUDIO_SAMPLING_RATE,
-            output=True,
-            output_device_index=self.device_index,
-            input=enable_recording,
-            input_device_index=self.input_device_index,
-            start=False,
-            stream_callback=self.callback,
-            frames_per_buffer=AUDIO_BUFFER_SIZE,
+        stream = sd.Stream(
+            device=self.output_device_name,
+            blocksize=1024,
+            channels=1, # This should be multichannel compatible
+            #dtype=AUDIO_FORMAT,
+            samplerate=AUDIO_SAMPLING_RATE,
+            callback=self.callback,
         )
-        
+        stream.start()
         self.stream_instance = stream
+
+    def write(self, data):
+        self.stream_instance.write(data)
+
+
+
+
 
     def play_stream_non_blocking(
         self, content: str | np.ndarray, channel: int | None = None
@@ -278,6 +259,7 @@ class SdAudioStreamer:
         self.stream.close()
         self.stream = None
 
+
     def callback(
         self, in_data: Any, frame_count: Any, time_info: Any, status: Any
     ) -> tuple[bytes, int]:
@@ -285,7 +267,7 @@ class SdAudioStreamer:
             frame_count * self.cb_count : frame_count * (self.cb_count + 1)
         ]
         self.cb_count = self.cb_count + 1
-
+#
         if self.input_device_name is not None:
             self.recorded_frames.append(in_data)
         return (data, pyaudio.paContinue)

@@ -1,14 +1,16 @@
 from pyaudioengine import AudioStreamer
 from sounddevice_engine import SdAudioStreamer
+from sine_burst import SineBurst
 
+import numpy as np
 
-audio_streamer = AudioStreamer(
-    'Primary Sound Driver')
+sd_audio_streamer = SdAudioStreamer(output_device='Primary Sound Driver')
+sine_burst = SineBurst(1000,-12,1,48000)
 
-sd_audio_streamer = SdAudioStreamer('Primary Sound Driver')
-
-audio_streamer.initialize_output_device()
 sd_audio_streamer.initialize_output_device()
-audio_streamer.initialise_stream()
-audio_stream = audio_streamer.stream_instance
+sd_audio_streamer.initialise_stream()
+audio_stream = sd_audio_streamer.stream_instance
 print(f"Initialised {audio_stream}")
+print(audio_stream.active)
+#while audio_stream.stream_instance:
+audio_stream.write(np.ascontiguousarray(sine_burst.signal.astype(np.float32)))
