@@ -57,36 +57,36 @@ class SdAudioStreamer:
         found_output_device = False
         for i in devices:
             if self.output_device_name in i["name"]:
-                print(f"Found device {self.output_device_name} with idx {i['index']} ")
+                print(f"Found device '{self.output_device_name}' with idx {i['index']} ")
                 found_output_device = True
+                self.device_index = i["index"]
         if found_output_device != True:
             print(f"Unable to find output device: {self.output_device_name}")
-        device_count = sd.query_hostapis()
-        for i in device_count:
-            
-                print(i)
-        device_index = -1
-        for i in range(0, device_count):
-            if (
-                sd.query_hostapis(HOST_API_INDEX, i).get(
-                    "maxOutputChannels"
-                )
-            ) > 0:
-                device_name = sd.query_hostapis(
-                    HOST_API_INDEX, i
-                ).get("name")
-                self.output_devices.append({"name": device_name, "index": i})
-        for device in self.output_devices:
-            if device["name"] == self.output_device_name:
-                device_index = device["index"]
-                break
-        if device_index == -1:
-            raise Exception(
-                'Audio output device "{}" could not be found.'.format(
-                    self.output_device_name
-                )
-            )
-        self.device_index = device_index
+
+
+
+#        device_index = -1
+#        for i in range(0, device_count):
+#            if (
+#                sd.query_hostapis(HOST_API_INDEX, i).get(
+#                    "maxOutputChannels"
+#                )
+#            ) > 0:
+#                device_name = sd.query_hostapis(
+#                    HOST_API_INDEX, i
+#                ).get("name")
+#                self.output_devices.append({"name": device_name, "index": i})
+#        for device in self.output_devices:
+#            if device["name"] == self.output_device_name:
+#                device_index = device["index"]
+#                break
+#        if device_index == -1:
+#            raise Exception(
+#                'Audio output device "{}" could not be found.'.format(
+#                    self.output_device_name
+#                )
+#            )
+
 
         # Check if output device is selected in the OS
         # current_default_output = self.pa.get_default_output_device_info()
