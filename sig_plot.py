@@ -40,8 +40,8 @@ def add_time_plot(audio_object, window, row, col):
 
     p2.plot(x=x, y=y, pen=1)
 
-def add_label(window, value):
-    label = pg.LabelItem(justify='right')
+def add_label(window, value, justify):
+    label = pg.LabelItem(justify=justify)
     label.setText(value)
     window.addItem(label)
 

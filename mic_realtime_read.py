@@ -93,8 +93,8 @@ p1.setYRange(-6, 0, padding=0)
 
 p2.setYRange(-0.05, 0.05)
 
-curve_freq = p1.plot()                       # create an empty "plot" (a curve to plot)#
-curve_time = p2.plot()
+curve_freq = p1.plot(pen=1)                       # create an empty "plot" (a curve to plot)#
+curve_time = p2.plot(pen=1)
 
 
 #windowWidth = 500                       # width of the window displaying the curve
@@ -110,7 +110,7 @@ win.show() # you need to add this
 
 # Realtime data plot. Each time this function is called, the data display is updated
 def update():
-    global curve, ptr, Xm    
+    global ptr, Xm    
     #Xm[:-1] = Xm[1:]                      # shift data in the temporal mean 1 sample left
     value = integer_data               # read line (single value) from the serial port
     Xm = value               # vector containing the instantaneous values      
@@ -120,7 +120,7 @@ def update():
     QApplication.processEvents()    # you MUST process the plot now
 
 def update_fft():
-    global curve, ptr, Xm                       # shift data in the temporal mean 1 sample left
+    global ptr, Xm                       # shift data in the temporal mean 1 sample left
     value = 2.0/576 * np.abs(yf[0:576//2])            # read line (single value) from the serial port
     Xm = value               # vector containing the instantaneous values                      
     curve_freq.setData(xf,Xm)                   # set the curve with this data
@@ -142,22 +142,12 @@ while stream.is_active():  # <--------------------------------------------
     update()
 
 
-    x +=0.01
+    #x +=0.01
 
-    y = np.linspace(0,1,len(yf))
-    freq_spec = 2.0/576 * np.abs(yf[0:576//2])  
-    z = (freq_spec - min(freq_spec)) / ( max(freq_spec) - min(freq_spec))
-    y = np.linspace(0,1,len(freq_spec))
-    
-
-
-    pts = np.vstack([x,y,z]).transpose()
-
-
-    
-    #plt = gl.GLLinePlotItem(pos=pts)
-
-    #view.addItem(plt)
+    #y = np.linspace(0,1,len(yf))
+    #freq_spec = 2.0/576 * np.abs(yf[0:576//2])  
+    #z = (freq_spec - min(freq_spec)) / ( max(freq_spec) - min(freq_spec))
+    #y = np.linspace(0,1,len(freq_spec))
 
     time.sleep(1/(44100/576))
 app.exec_()  # Start QApplication event loop ***
