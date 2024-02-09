@@ -14,7 +14,7 @@ audio_file = AudioFile(r"4AM.wav")
 sine_burst = audio_slicer(sine_burst, 0, 0.55)
 sine_sweep = audio_slicer(sine_sweep, 0, 0.55)
 white_noise = audio_slicer(white_noise, 0, 0.55)
-#audio_file = audio_slicer(audio_file, 0, 1)
+audio_file = audio_slicer(audio_file, 0, 0.55)
 
 audio_reverse(audio_file) 
 
@@ -31,7 +31,7 @@ audio_parameter_calc(audio_file, True) # DOESN'T WORK WITH MULTICHANNEL
 audio_fft_convert(sine_burst, True, "test_sine_fft")
 audio_fft_convert(sine_sweep, True, "test_sine_sweep_fft")
 audio_fft_convert(white_noise, True, "test_white_noise_fft")
-# audio_fft_convert(audio_file, True, "test_audio_file_fft") DOESN'T WORK WITH MULTICHANNEL
+audio_fft_convert(audio_file, True, "test_audio_file_fft")
 
 audio_export(sine_burst, "test_sine_export")
 audio_export(sine_sweep, "test_sine_sweep_export")

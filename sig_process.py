@@ -8,8 +8,15 @@ from scipy.io import wavfile
 def audio_slicer(audio_object, start_secs, end_secs):
     start_sample = int(start_secs * audio_object.samplerate)
     end_sample = int(end_secs * audio_object.samplerate)
-    audio_object.signal = audio_object.signal[start_sample:end_sample]
-    audio_object.time_axis = audio_object.time_axis[start_sample:end_sample]
+    processed_data = []
+    processed_time = []
+    for i in audio_object.signal:
+        sliced_signal = i[start_sample:end_sample]
+        sliced_time = i[start_sample:end_sample]
+        processed_data.append(sliced_signal)
+        processed_time.append(sliced_time)
+    audio_object.signal = processed_data
+    audio_object.time_axis = processed_time
 
     return audio_object
 
@@ -67,23 +74,28 @@ def audio_fft_convert(
         audio_object, 
         save_to_file = False, 
         file_name = None):
-    duration = len(audio_object.signal) / audio_object.samplerate
-    fft_array = scipy.fft.fft(audio_object.signal)
-    fft_freqs = scipy.fft.fftfreq(int(audio_object.samplerate * duration), 1 / audio_object.samplerate)
+    fft_freq_list=[]
+    fft_db_list = []
+    for i in audio_object.signal:
+        duration = len(i) / audio_object.samplerate
+        fft_array = scipy.fft.fft(i)
+        fft_freqs = scipy.fft.fftfreq(int(audio_object.samplerate * duration), 1 / audio_object.samplerate)
 
-    reference = max(abs(fft_array)) # 0dB becomes Maximum Amplitude
-    fft_db = []
+        reference = max(abs(fft_array)) # 0dB becomes Maximum Amplitude
+        fft_db = []
 
-    for i in fft_array:
-        fft_db.append(20 * math.log10(abs(i) / reference))
+        for k in fft_array:
+            fft_db.append(20 * math.log10(abs(k) / reference))
 
-    fft_data_length = int(len(fft_freqs) / 2)
-    fft_db = fft_db[:fft_data_length]
-    fft_freqs = fft_freqs[:fft_data_length]
-    fft_freqs = np.array(fft_freqs)
-    fft_db = np.array(fft_db)
-    audio_object.fft_freqs = fft_freqs
-    audio_object.fft_db = fft_db
+        fft_data_length = int(len(fft_freqs) / 2)
+        fft_db = fft_db[:fft_data_length]
+        fft_freqs = fft_freqs[:fft_data_length]
+        fft_freqs = np.array(fft_freqs)
+        fft_db = np.array(fft_db)
+        fft_freq_list.append(fft_freqs)
+        fft_db_list.append(fft_db)
+    audio_object.fft_freqs = fft_freq_list
+    audio_object.fft_db = fft_db_list
 
     if save_to_file == True:
         fft_data = np.stack(((fft_freqs,fft_db)))
@@ -109,7 +121,12 @@ def audio_envelope_follower(audio_object, frame_size, hop_length):
 # Functions related to exporting of audio data
 
 def audio_export(audio_object, file_name):
-
-    audio_array = audio_object.signal * 2**15
-    data = audio_array.astype(np.int16)
-    wavfile.write(str(file_name)+".wav", audio_object.samplerate, data)
+    data_list=[]
+    for i in audio_object.signal:
+        i = i * 2**15
+        data = i.astype(np.int16)
+        data_list.append(data)
+    data_array = np.array(data_list)
+    data_array = np.transpose(data_array)
+    print(data_array.dtype)
+    wavfile.write(str(file_name)+".wav", audio_object.samplerate, data_array)
