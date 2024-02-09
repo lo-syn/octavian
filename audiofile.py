@@ -28,7 +28,6 @@ class AudioFile(object):
 
         import matplotlib.pyplot as plt
         from audiofile import AudioFile
-        file_path = r"C:\Users\laure\OneDrive\Documents\Octavian\4AM.wav"
 
         audiofile = AudioFile(file_path)
         colour_list=['r','b','g']
@@ -63,7 +62,7 @@ class AudioFile(object):
         self.signal = signal_list
         step = 1 / self.samplerate
         time_axis = np.arange(0,len(self.signal[0]))
-        self.time_axis = [time_axis * step]
+        self.time_axis = time_axis * step
 
     def run(self):
         self.open_audiofile()
