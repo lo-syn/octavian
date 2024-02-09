@@ -37,8 +37,8 @@ class SineSweep(object):
         from sine_sweep import SineSweep
         sine_sweep = SineSweep(20,200, -3, 1, 48000, windowed=False)
         windowed_sine_sweep = SineSweep(20, 200, -12, 1, 48000, windowed=True)
-        plt.plot(sine_sweep.time_axis, sine_sweep.signal, color='r')
-        plt.plot(windowed_sine_sweep.time_axis, windowed_sine_sweep.signal, color='b')
+        plt.plot(sine_sweep.time_axis, sine_sweep.signal[0], color='r')
+        plt.plot(windowed_sine_sweep.time_axis, windowed_sine_sweep.signal[0], color='b')
         plt.title('Sine Bursts')
         plt.ylabel('Amplitude')
         plt.ylim([-1, 1])
@@ -110,13 +110,13 @@ class SineSweep(object):
         '''
         This method applies a cosine window to the first 
         '''
-        fade_samples = int(len(sine_sweep) / 10)
+        fade_samples = int(len(sine_sweep[0]) / 10)
         fade = np.arange(0, fade_samples-1, dtype=int)
         fade_in = (1 - np.cos(fade/fade_samples*math.pi))/2
         fade_out = np.flip(fade_in)
         idx = np.arange(1,fade_samples)
-        sine_sweep[idx]=sine_sweep[idx] * fade_in
-        sine_sweep[-len(idx)::]=sine_sweep[-len(idx)::] * fade_out
+        sine_sweep[0][idx]=sine_sweep[0][idx] * fade_in
+        sine_sweep[0][-len(idx)::]=sine_sweep[0][-len(idx)::] * fade_out
         self.signal = sine_sweep
 
     def run(self):

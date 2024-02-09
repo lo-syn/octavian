@@ -82,13 +82,13 @@ class SineBurst(object):
         '''
         This method applies a cosine window to the first 
         '''
-        fade_samples = int(len(sine_burst) / 10)
+        fade_samples = int(len(sine_burst[0]) / 10)
         fade = np.arange(0, fade_samples-1, dtype=int)
         fade_in = (1 - np.cos(fade/fade_samples*pi))/2
         fade_out = np.flip(fade_in)
         idx = np.arange(1,fade_samples)
-        sine_burst[idx]=sine_burst[idx] * fade_in
-        sine_burst[-len(idx)::]=sine_burst[-len(idx)::] * fade_out
+        sine_burst[0][idx]=sine_burst[0][idx] * fade_in
+        sine_burst[0][-len(idx)::]=sine_burst[0][-len(idx)::] * fade_out
         self.signal = sine_burst
 
     def run(self):
