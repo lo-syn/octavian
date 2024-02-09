@@ -29,7 +29,6 @@ def audio_amplify_dbfs(audio_object, gain_dbfs):
     processed_arrays = []
     amplitude_multiplier = 10 ** (gain_dbfs / 20)
     for i in audio_object.signal:
-        print(i)
         audio_array = amplitude_multiplier * i
         if (audio_array > 1.0).any() or (audio_array < -1.0).any():
             print('Signal is clipped')
@@ -45,7 +44,6 @@ def audio_parameter_calc(audio_object, print_out = False):
     rms_list = []
     crest_factor_list = []
     for i in audio_object.signal:
-        print(i)
         peak = max(i)
         peak_db = round((20 * np.log10(1/peak))*-1,2)
   
@@ -133,5 +131,4 @@ def audio_export(audio_object, file_name):
         data_list.append(data)
     data_array = np.array(data_list)
     data_array = np.transpose(data_array)
-    print(data_array.dtype)
     wavfile.write(str(file_name)+".wav", audio_object.samplerate, data_array)
