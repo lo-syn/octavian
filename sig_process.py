@@ -95,7 +95,11 @@ def audio_fft_convert(
     audio_object.fft_db = fft_db_list
 
     if save_to_file == True:
-        fft_data = np.stack(((fft_freqs,fft_db)))
+        fft_data = []
+        fft_data.append(fft_freqs)
+        for i in fft_db_list:
+            fft_data.append(i)
+        fft_data = np.array(fft_data)
         fft_data = np.transpose(fft_data)
         np.savetxt(file_name+".csv", fft_data, header="Frequency (Hz), Level (dB)", delimiter=',')
 
