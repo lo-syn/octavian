@@ -38,15 +38,18 @@ audio_export(sine_sweep, "test_sine_sweep_export")
 audio_export(white_noise, "test_white_noise_export")
 audio_export(audio_file, "test_audio_file_export")
 
-
-# audio_envelope_follower(audio_file, 1024, 512) DOESN'T WORK WITH MULTICHANNEL
+audio_envelope_follower(sine_burst, 1024, 512)
+audio_envelope_follower(sine_sweep, 1024, 512)
+audio_envelope_follower(white_noise, 1024, 512)
+audio_envelope_follower(audio_file, 1024, 512)
 
 
 #plt.plot(audio_file.env_time, audio_file.env_amplitude, color = 'r')
 # plt.plot(sine_burst.fft_freqs, sine_burst.fft_db, color='r')
 # plt.plot(sine_sweep.fft_freqs, sine_sweep.fft_db, color='b')
 # plt.plot(white_noise.fft_freqs, white_noise.fft_db, color='g')
-plt.plot(audio_file.time_axis, audio_file.signal, color='b')
+plt.plot(audio_file.env_time[0], audio_file.env_amplitude[0], color='b')
+plt.plot(audio_file.env_time[1], audio_file.env_amplitude[1], color='r')
 plt.title('FFT')
 plt.ylabel('Amplitude')
 plt.xlabel('Freq (Hz)')
