@@ -17,8 +17,6 @@ def audio_slicer(audio_object, start_secs, end_secs):
     audio_object.signal = processed_data
     audio_object.time_axis = sliced_time
 
-    return audio_object
-
 def audio_reverse(audio_object):
     audio_object.signal = np.flip(audio_object.signal)
 
@@ -35,8 +33,6 @@ def audio_amplify_dbfs(audio_object, gain_dbfs):
         audio_array[audio_array < -1.0] = -1.0
         processed_arrays.append(audio_array)
     audio_object.signal = processed_arrays
-
-    return audio_object
 
 def audio_parameter_calc(audio_object, print_out = False):
     peak_list = []
