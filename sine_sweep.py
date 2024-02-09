@@ -104,7 +104,7 @@ class SineSweep(object):
         self._sweepperiod = sweepperiod
         self._duration = duration
         self.time_axis = time
-        self.signal = sweep
+        self.signal = [sweep]
 
     def windowing(self, sine_sweep):
         '''

@@ -52,9 +52,14 @@ class AudioFile(object):
         self.samplerate, signal = wavfile.read(self.file_path)
         self.num_channels = signal.shape  
         convert_16bit = float(2**15)
-        self.signal = (signal / (convert_16bit))
+        signal_list = []
+        signal = np.transpose(signal)
+        if signal.size > 1:
+            for i in signal:
+                signal_list.append(i/ (convert_16bit))
+        self.signal = signal_list
         step = 1 / self.samplerate
-        time_axis = np.arange(0,len(self.signal))
+        time_axis = np.arange(0,len(self.signal[0]))
         self.time_axis = time_axis * step
 
     def run(self):

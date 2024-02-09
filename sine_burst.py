@@ -74,7 +74,7 @@ class SineBurst(object):
         step = 1 / self.samplerate
         time_axis = np.arange(0,len(sine_burst))
         self.time_axis = time_axis * step
-        self.signal = sine_burst
+        self.signal = [sine_burst]
 
         return sine_burst
 

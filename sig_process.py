@@ -19,35 +19,47 @@ def audio_reverse(audio_object):
 # Functions related to Gain (addition/subtraction/calculation/conversion)
 
 def audio_amplify_dbfs(audio_object, gain_dbfs):
+    processed_arrays = []
     amplitude_multiplier = 10 ** (gain_dbfs / 20)
-    audio_array = amplitude_multiplier * audio_object.signal
-    if (audio_array > 1.0).any() or (audio_array < -1.0).any():
-        print('Signal is clipped')
-    audio_array[audio_array > 1.0] = 1.0
-    audio_array[audio_array < -1.0] = -1.0
-    audio_object.signal = audio_array
+    for i in audio_object.signal:
+        print(i)
+        audio_array = amplitude_multiplier * i
+        if (audio_array > 1.0).any() or (audio_array < -1.0).any():
+            print('Signal is clipped')
+        audio_array[audio_array > 1.0] = 1.0
+        audio_array[audio_array < -1.0] = -1.0
+        processed_arrays.append(audio_array)
+    audio_object.signal = processed_arrays
 
     return audio_object
 
 def audio_parameter_calc(audio_object, print_out = False):
-    peak = max(audio_object.signal)
-    peak_db = round((20 * np.log10(1/peak))*-1,2)
+    peak_list = []
+    rms_list = []
+    crest_factor_list = []
+    for i in audio_object.signal:
+        print(i)
+        peak = max(i)
+        peak_db = round((20 * np.log10(1/peak))*-1,2)
   
-    rms = np.sqrt(np.mean(audio_object.signal**2))
-    rms_db = round((20 * np.log10(1/rms))*-1,2)
+        rms = np.sqrt(np.mean(i**2))
+        rms_db = round((20 * np.log10(1/rms))*-1,2)
 
-    crest_factor = round(20 * np.log10(peak/rms),2)
+        crest_factor = round(20 * np.log10(peak/rms),2)
+        peak_list.append(peak_db)
+        rms_list.append(rms_db)
+        crest_factor_list.append(crest_factor)
 
     if print_out == True:
         print("Crest Factor (dB): ", crest_factor)
         print("Peak (dB): ", peak_db)
         print("RMS (dB): ", rms_db)
 
-    audio_object.peak_db = peak_db
-    audio_object.rms_db = rms_db
-    audio_object.crest_factor = crest_factor
+    audio_object.peak_db = peak_list
+    audio_object.rms_db = rms_list
+    audio_object.crest_factor = crest_factor_list
 
-    return crest_factor, peak_db, rms_db
+    #return crest_factor, peak_db, rms_db
 
 # Functions related to time/frequency domain conversion
 

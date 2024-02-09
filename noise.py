@@ -78,7 +78,7 @@ class Noise(object):
         step = 1 / self.samplerate
         time_axis = np.arange(0,len(noise))
         self.time_axis = time_axis * step
-        self.signal = noise
+        self.signal = [noise]
 
         return noise
 
@@ -92,7 +92,7 @@ class Noise(object):
         noise = noise * multiplier
         gain_dbfs = 10 ** (self.db_amplitude/20)
         noise = noise * gain_dbfs
-        self.signal = noise
+        self.signal = [noise]
 
     def run(self):
         noise = self.gen_noise()
