@@ -32,7 +32,7 @@ class AudioFile(object):
         audiofile = AudioFile(file_path)
         colour_list=['r','b','g']
         for i in range(len(audiofile.signal)):
-            plt.plot(audiofile.time_axis[0], audiofile.signal[i], color=colour_list[i])
+            plt.plot(audiofile.time_axis, audiofile.signal[i], color=colour_list[i])
         plt.title('Audio File')
         plt.ylabel('Amplitude')
         plt.ylim([-1, 1])
