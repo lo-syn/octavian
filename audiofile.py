@@ -30,7 +30,7 @@ class AudioFile(object):
         from audiofile import AudioFile
 
         audiofile = AudioFile(file_path)
-        colour_list=['r','b','g']
+        colour_list=['r','b','g'] # Will only work for 3 arrays because I'm lazy
         for i in range(len(audiofile.signal)):
             plt.plot(audiofile.time_axis, audiofile.signal[i], color=colour_list[i])
         plt.title('Audio File')
