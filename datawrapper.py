@@ -17,7 +17,7 @@ class DataWrapper(object):
     file : DataWrapper.signal
         Returns a list of arrays with audio file signal
 
-    time_axis : AudioFile.time_axis
+    time_axis : DataWrapper.time_axis
         Returns a 1D array with the time axis
 
     Examples
