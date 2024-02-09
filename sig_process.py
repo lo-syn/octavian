@@ -9,7 +9,6 @@ def audio_slicer(audio_object, start_secs, end_secs):
     start_sample = int(start_secs * audio_object.samplerate)
     end_sample = int(end_secs * audio_object.samplerate)
     processed_data = []
-    processed_time = []
     for i in audio_object.signal:
         sliced_signal = i[start_sample:end_sample]
         sliced_time = i[start_sample:end_sample]
