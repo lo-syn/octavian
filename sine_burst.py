@@ -94,7 +94,7 @@ class SineBurst(object):
     def run(self):
         sine_burst = self.gen_sineburst()
         if self.windowed == True:
-            self.windowing(sine_burst)
+            self.windowing(self.signal)
     
     @staticmethod
     def _check_parameters(freq, db_amplitude, duration_s, samplerate):
