@@ -22,7 +22,7 @@ class SineSweep(object):
     Returns
     -------
     sweep : SineBurst.signal
-        Returns a 1D array with sine sweep signal
+        Returns a list of arrays with sine sweep signal
 
     time_axis : SineBurst.time
         Returns a 1D array with the time axis

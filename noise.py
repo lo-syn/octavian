@@ -20,7 +20,7 @@ class Noise(object):
     Returns
     -------
     noise : Noise.signal
-        Returns a 1D array with noise signal
+        Returns a list of arrays with noise signal
 
     time_axis : Noise.time_axis
         Returns a 1D array with the time axis

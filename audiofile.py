@@ -15,7 +15,7 @@ class AudioFile(object):
     Returns
     -------
     file : AudioFile.signal
-        Returns a multiple dimension array with audio file signal
+        Returns a list of arrays with audio file signal
 
     time_axis : AudioFile.time_axis
         Returns a 1D array with the time axis

@@ -20,7 +20,7 @@ class SineBurst(object):
     Returns
     -------
     signal : SineBurst.signal
-        Returns a 1D array with sine burst signal
+        Returns a list of arrays with sine burst signal
 
     time_axis : SineBurst.time
         Returns a 1D array with the time axis
