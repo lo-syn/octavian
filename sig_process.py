@@ -100,7 +100,6 @@ def audio_fft_convert(
 
 def audio_envelope_follower(audio_object, frame_size, hop_length):
     envelope_data = []
-    envelope_times = []
     for i in audio_object.signal:
         amplitude_envelope = []
 
@@ -109,15 +108,15 @@ def audio_envelope_follower(audio_object, frame_size, hop_length):
         for k in range(0, len(i), hop_length):
             current_frame_ae = max(i[k:k+frame_size])
             amplitude_envelope.append(current_frame_ae)
-    
-        frames = range(0,len(amplitude_envelope))
-        times=[]
-        for f in frames:
-            times.append(f * hop_length/audio_object.samplerate)
         envelope_data.append(amplitude_envelope)
-        envelope_times.append(times)
+    
+    frames = range(0,len(amplitude_envelope))
+    time=[]
+    for f in frames:
+        time.append(f * hop_length/audio_object.samplerate)
+        
     audio_object.env_amplitude = envelope_data
-    audio_object.env_time = envelope_times
+    audio_object.env_time = time
 
 # Functions related to exporting of audio data
 
