@@ -27,16 +27,16 @@ def add_freq_plot(window, row, col, legend=False):
 
     return p1
 
-def update_freq_plot(audio_object, plot, colour, name=None):
+def update_freq_plot(audio_object, plot, colour, add_legend=False):
     x = audio_object.fft_freqs
     channel_counter = 0
     for i in audio_object.fft_db:
         y = i
-        if name is not None:
+        if add_legend == True:
             if len(audio_object.fft_db) == 1:
-                plot.plot(x=x, y=y, pen=colour, name=name)
+                plot.plot(x=x, y=y, pen=colour, name=audio_object.name)
             else:
-                plot.plot(x=x, y=y, pen=colour, name=name+str(channel_counter))
+                plot.plot(x=x, y=y, pen=colour, name=audio_object.name+str(channel_counter))
                 channel_counter += 1
         else:
             plot.plot(x=x, y=y, pen=colour)
@@ -54,31 +54,31 @@ def add_time_plot(window, row, col, legend=False):
         p2.addLegend()
     return p2
 
-def update_time_plot(audio_object, plot, colour, name=None):
+def update_time_plot(audio_object, plot, colour, add_legend=False):
     x = audio_object.time_axis
     channel_counter = 0
     for i in audio_object.signal:
         y = i
-        if name is not None:
+        if add_legend == True:
             if len(audio_object.signal) == 1:
-                plot.plot(x=x, y=y, pen=colour, name=name)
+                plot.plot(x=x, y=y, pen=colour, name=audio_object.name)
             else:
-                plot.plot(x=x, y=y, pen=colour, name=name+str(channel_counter))
+                plot.plot(x=x, y=y, pen=colour, name=audio_object.name+str(channel_counter))
                 channel_counter += 1
         else:
             plot.plot(x=x, y=y, pen=colour)
 
-def update_time_envelope_plot(audio_object, plot, colour,name):
+def update_time_envelope_plot(audio_object, plot, colour,add_legend=False):
     try:
         x = audio_object.env_time
         channel_counter = 0
         for i in audio_object.env_amplitude:
             y = i
-            if name is not None:
+            if add_legend == True:
                 if len(audio_object.env_amplitude) == 1:
-                    plot.plot(x=x, y=y, pen=colour, name=name+" Envelope")
+                    plot.plot(x=x, y=y, pen=colour, name=audio_object.name+" Envelope")
                 else:
-                    plot.plot(x=x, y=y, pen=colour, name=name+str(channel_counter)+ " Envelope")
+                    plot.plot(x=x, y=y, pen=colour, name=audio_object.name+str(channel_counter)+ " Envelope")
                     channel_counter += 1
             else:
                 plot.plot(x=x, y=y, pen=colour)
