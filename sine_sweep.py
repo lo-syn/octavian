@@ -105,6 +105,7 @@ class SineSweep(object):
         self._duration = duration
         self.time_axis = time
         self.signal = [sweep]
+        self.name = "Sine Sweep"
 
     def windowing(self, sine_sweep):
         '''
@@ -118,6 +119,7 @@ class SineSweep(object):
         sine_sweep[0][idx]=sine_sweep[0][idx] * fade_in
         sine_sweep[0][-len(idx)::]=sine_sweep[0][-len(idx)::] * fade_out
         self.signal = sine_sweep
+        self.name = "Windowed Sine Sweep"
 
     def run(self):
         self.gen_sinesweep()

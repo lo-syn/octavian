@@ -75,6 +75,7 @@ class SineBurst(object):
         time_axis = np.arange(0,len(sine_burst))
         self.time_axis = time_axis * step
         self.signal = [sine_burst]
+        self.name = "Sine Burst"
 
         return sine_burst
 
@@ -90,9 +91,10 @@ class SineBurst(object):
         sine_burst[0][idx]=sine_burst[0][idx] * fade_in
         sine_burst[0][-len(idx)::]=sine_burst[0][-len(idx)::] * fade_out
         self.signal = sine_burst
+        self.name = "Windowed Sine Burst"
 
     def run(self):
-        sine_burst = self.gen_sineburst()
+        self.gen_sineburst()
         if self.windowed == True:
             self.windowing(self.signal)
     

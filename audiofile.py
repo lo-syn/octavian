@@ -1,5 +1,6 @@
 from scipy.io import wavfile
 import numpy as np
+import os
 
 class AudioFile(object):
 
@@ -63,6 +64,7 @@ class AudioFile(object):
         step = 1 / self.samplerate
         time_axis = np.arange(0,len(self.signal[0]))
         self.time_axis = time_axis * step
+        self.name = os.path.basename(self.file_path)
 
     def run(self):
         self.open_audiofile()
