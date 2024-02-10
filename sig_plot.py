@@ -10,9 +10,10 @@ def init_plot():
 def exec_plot(app):
     app.exec_()
 
-def create_window():
+def create_window(background_colour="k"):
     window = pg.GraphicsLayoutWidget()
     window.setGeometry(100, 100, 1400, 900)
+    window.setBackground(background_colour)
     window.show()
     return window
 
