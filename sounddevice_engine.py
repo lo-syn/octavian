@@ -191,7 +191,7 @@ class SdAudioStreamer:
 
     def initialise_stream(self, channel: int | None = None
     ) -> tuple[np.ndarray | None, np.ndarray]:
-
+        self.content = []
         self.cb_count = 0
         enable_recording = True if self.input_device_name is not None else False
 
@@ -199,7 +199,7 @@ class SdAudioStreamer:
             device=self.output_device_name,
             blocksize=1024,
             channels=1, # This should be multichannel compatible
-            #dtype=AUDIO_FORMAT,
+            dtype= 'int16',
             samplerate=AUDIO_SAMPLING_RATE,
             callback=self.callback,
         )
@@ -253,24 +253,49 @@ class SdAudioStreamer:
         # Start stream
         self.stream.start_stream()
 
+    def play_sd_stream(
+        self, content: str | np.ndarray, channel: int | None = None
+    ) -> tuple[np.ndarray | None, np.ndarray]:
+        self.content = content
+        if isinstance(content, str):
+            sampling_rate, data = wf.read(content)
+            if channel is not None:
+                self.content = data[:, channel]
+            else:
+                self.content = data[:]
+            self.content = self.content.copy(order="C")
+        elif isinstance(content, np.ndarray):
+            self.content = content
+            sampling_rate = AUDIO_SAMPLING_RATE
+
+        audio_format: int = {
+            np.dtype("int8"): pyaudio.paInt8,
+            np.dtype("int16"): pyaudio.paInt16,
+            np.dtype("int32"): pyaudio.paInt32,
+        }.get(self.content.dtype)
+        self.cb_count = 0
+
+        ''' Write stream functionality here '''
+
+        self.stream_instance.write(self.content)        
+
     def stop_stream(self) -> None:
         if self.stream.is_active():
             self.stream.stop_stream()
         self.stream.close()
         self.stream = None
 
-
     def callback(
-        self, in_data: Any, frame_count: Any, time_info: Any, status: Any
-    ) -> tuple[bytes, int]:
+        self, indata: Any, outdata: Any, frames: Any, time: Any, status: Any
+    ) -> None:
         data = self.content[
-            frame_count * self.cb_count : frame_count * (self.cb_count + 1)
+            frames * self.cb_count : frames * (self.cb_count + 1)
         ]
         self.cb_count = self.cb_count + 1
 #
         if self.input_device_name is not None:
-            self.recorded_frames.append(in_data)
-        return (data, pyaudio.paContinue)
+            self.recorded_frames.append(indata)
+        return (data)#, pyaudio.paContinue)
 
     def close(self) -> None:
         self.pa.terminate()
